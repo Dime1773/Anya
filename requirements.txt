@@ -1,0 +1,15 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+requirements.txt - Зависимости для Anya Distributor v1.10.8
+
+Установка:
+    pip install -r requirements.txt
+"""
+
+PyQt6==6.6.1
+PyQt6-Qt6==6.6.0
+PyQt6-sip==13.6.0
+pysmb==1.2.10
+openpyxl==3.10.10
+pandas==2.0.3

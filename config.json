@@ -1,0 +1,10 @@
+{
+  "port": 445,
+  "timeout_ms": 3000,
+  "max_retries": 3,
+  "log_rotation_size_mb": 10,
+  "log_rotation_count": 5,
+  "default_transfer_username": "admin",
+  "default_transfer_password": "2445vr7",
+  "allowed_ports": [139, 445, 3389, 22]
+}
