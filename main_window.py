@@ -12,6 +12,8 @@ Anya Distributor - распределение файлов по подразде
 """
 import logging
 import openpyxl
+import json
+from PyQt6.QtWidgets import QFileDialog, QMessageBox
 from typing import List, Dict
 from pathlib import Path
 from datetime import datetime
@@ -21,7 +23,7 @@ from PyQt6.QtWidgets import (
     QCheckBox, QLabel, QComboBox, QFileDialog, QMessageBox,
     QDialog, QProgressBar, QHeaderView, QLineEdit, QTabWidget, QSplitter, QApplication
 )
-from PyQt6.QtCore import Qt, QThread, pyqtSignal, pyqtSlot, QUrl
+from PyQt6.QtCore import Qt, QUrl
 from PyQt6.QtGui import QColor, QFont, QDesktopServices
 from database import DatabaseManager
 from workers import AsyncCheckWorker, TransferWorker, AutomatErrorWorker
@@ -220,7 +222,7 @@ class MainWindow(QMainWindow):
         # Верхняя панель
         top_panel = QHBoxLayout()
         btn_load_db = QPushButton("Загрузить БД")
-        btn_load_db.clicked.connect(self._on_load_database)
+        self._load_database()
         top_panel.addWidget(btn_load_db)
         self.btn_check = QPushButton("Проверить подключение")
         self.btn_check.clicked.connect(self._on_check_connection)
@@ -384,18 +386,24 @@ QSplitter::handle { background-color: #3a3a3a; }
 """
         self.setStyleSheet(stylesheet)
 
-    def _load_database(self):
-        try:
-            branches = self.db.load_base()
-            if not branches:
-                logger.warning("База данных пуста")
-                self.table.setRowCount(0)
-                return
-            self._populate_table(branches)
-            logger.info(f"База загружена: {len(branches)} подразделений")
-        except Exception as e:
-            logger.error(f"Ошибка загрузки БД: {e}")
-            QMessageBox.critical(self, "Ошибка", f"Ошибка: {e}")
+    def load_database(self):
+        """Метод, вызываемый при нажатии кнопки Загрузить БД"""
+        # Диалог выбора файла
+        file_name, _ = QFileDialog.getOpenFileName(self, "Выберите файл базы данных", "",
+                                                "JSON files (*.json);;All Files (*)")
+        if file_name:
+            try:
+                # Чтение файла
+                with open(file_name, 'r') as f:
+                    db_data = json.load(f)
+                    # Обработать полученный JSON-файл (загрузка данных)
+                    print("Файл загружен:", file_name)
+            except FileNotFoundError:
+                QMessageBox.warning(self, "Ошибка", "Файл не найден.")
+            except json.JSONDecodeError:
+                QMessageBox.warning(self, "Ошибка", "Неверный формат JSON.")
+            except Exception as e:
+                QMessageBox.critical(self, "Критическая ошибка", f"При загрузке произошла ошибка: {e}")
 
     def _populate_table(self, branches: List[Dict]):
         valid_branches = [b for b in branches if isinstance(b, dict)]
