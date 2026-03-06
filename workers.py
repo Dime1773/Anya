@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-workers.py - Асинхронные потоки для Anya Distributor v1.11.2 (исправленный 3)
+workers.py - Асинхронные потоки для Anya Distributor v1.12.1
 ОБНОВЛЕНИЯ:
 - TransferWorker: исправлена ошибка 'open_file' is not defined
 - TransferWorker: исправлена передача папок с использованием os.walk
@@ -19,7 +19,7 @@ from PyQt6.QtCore import QThread, pyqtSignal
 logger = logging.getLogger("distributor")
 
 # ============================================================================
-# ASYNC CHECKER - МАКСИМАЛЬНО БЫСТРАЯ проверка (Windows) v1.12.0
+# ASYNC CHECKER - МАКСИМАЛЬНО БЫСТРАЯ проверка (Windows) v1.12.1
 # ============================================================================
 
 class AsyncCheckWorker(QThread):
@@ -38,7 +38,7 @@ class AsyncCheckWorker(QThread):
                  ping_timeout: float = 0.2,
                  port_timeout: float = 0.3,
                  batch_size: int = 100,
-                 pause_between_batches: float = 0.1):
+                 pause_between_batches: float = 0.0):
         super().__init__()
         self.branches = branches
         self.db = db
